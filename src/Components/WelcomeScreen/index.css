@@ -1,0 +1,45 @@
+.container {
+  background: linear-gradient(200deg, #fd0404, #048ffd);
+  background-size: 400% 400%;
+  /* animation: Animation 60s ease infinite; GPU intensive*/
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+}
+
+.actions {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn {
+  border: 0px;
+  background: linear-gradient(200deg, #048ffd, #fd0404);
+  background-size: 400% 400%;
+  border-radius: 20px;
+  margin: 1%;
+  font-size: 10rem;
+  width: 50%;
+  height: 20%;
+}
+
+.btn:focus {
+  outline-width: 0;
+}
+
+/* @keyframes Animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+} */
