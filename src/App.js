@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import WelcomeScreen from "./Components/WelcomeScreen/index.jsx";
-import Main from "./Components/Main/index";
+import MainScreen from "./Components/Main/index";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class App extends Component {
@@ -9,7 +9,7 @@ class App extends Component {
     return (
       <Router className="App">
         <Route path="/" exact component={WelcomeScreen} />
-        <Route path="/main" exact component={Main} />
+        <Route path="/main" exact component={MainScreen} />
       </Router>
     );
   }
