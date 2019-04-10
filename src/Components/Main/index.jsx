@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import VideoFrame from "./VideoFrame/Player";
 import Playlist from "./Playlist/index";
 
-class Main extends Component {
+class MainScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,4 +23,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default MainScreen;
