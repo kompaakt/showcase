@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import "./App.css";
 import WelcomeScreen from "./Components/WelcomeScreen/index.jsx";
+import Main from "./Components/Main/index";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <WelcomeScreen />
-      </div>
+      <Router className="App">
+        <Route path="/" exact component={WelcomeScreen} />
+        <Route path="/main" exact component={Main} />
+      </Router>
     );
   }
 }
