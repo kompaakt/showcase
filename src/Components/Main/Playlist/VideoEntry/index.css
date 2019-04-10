@@ -1,0 +1,23 @@
+img {
+  max-width: 50px;
+  max-height: 50px;
+}
+
+.root {
+  border: 1px rgba(0, 0, 0, 0.13) solid;
+  max-width: 300px;
+  margin: 2px;
+  padding: 2px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.root > b {
+  margin-left: 2px;
+}
+
+.controlButtons {
+  margin-left: auto;
+  height: 100%;
+}
