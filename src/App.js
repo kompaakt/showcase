@@ -8,7 +8,7 @@ class App extends Component {
   render() {
     return (
       <Router className="App">
-        <Route path="/" exact component={WelcomeScreen} />
+        <Route path="/" exact component={MainScreen} />
         <Route path="/main" exact component={MainScreen} />
       </Router>
     );

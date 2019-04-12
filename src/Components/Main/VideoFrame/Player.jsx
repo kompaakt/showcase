@@ -2,6 +2,19 @@ import React from "react";
 import YouTube from "react-youtube";
 
 class Player extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      player: null
+    };
+  }
+
+  _onReady = event => {
+    this.props.setPlayer(event.target);
+    event.target.pauseVideo();
+  };
+
   render() {
     const opts = {
       height: "360",
@@ -17,13 +30,9 @@ class Player extends React.Component {
         videoId={this.props.videoId ? this.props.videoId : "2g811Eo7K8U"}
         opts={opts}
         onReady={this._onReady}
-        onStateChange={event => console.log(event)}
+        onStateChange={this.props.handleSendPlayingStatus}
       />
     );
-  }
-
-  _onReady(event) {
-    event.target.stopVideo();
   }
 }
 
