@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import VideoEntry from "./VideoEntry/index";
 import MD5 from "object-hash";
+import "./index.css";
 
 class Playlist extends Component {
   constructor(props) {
@@ -12,10 +13,13 @@ class Playlist extends Component {
   }
 
   handleClick = () => {
+    if (!this.state.newVideoFromInput) {
+      return;
+    }
     const inputValue = this.state.newVideoFromInput;
     let sanitizedVideoId = null;
     const match = inputValue.match(
-      /^.*(youtu\.be\/|vi?\/|u\/\w\/|embed\/|\?vi?=|\&vi?=)([^#\&\?]*).*/
+      /^.*(youtu\.be\/|vi?\/|u\/\w\/|embed\/|\?vi?=|vi?=)([^#]*).*/
     );
     if (match && match[2].length === 11) {
       sanitizedVideoId = match[2];
@@ -42,21 +46,19 @@ class Playlist extends Component {
 
   render() {
     return (
-      <div>
-        <div>
+      <div className="playlistRoot">
+        <div className="playlistInput">
           <input type="text" onChange={this.handleChange} />
           <button onClick={this.handleClick}>+</button>
         </div>
-        <ol>
+        <ol className="playlistEntries">
           {this.state.videos.map(video => (
-            <li key={MD5(video)}>
-              {
-                <VideoEntry
-                  id={video.id}
-                  handleRemove={this.handleRemoveVideo}
-                  handlePlay={this.handlePlayVideo}
-                />
-              }
+            <li key={MD5(video)} className="playlistEntry">
+              <VideoEntry
+                id={video.id}
+                handleRemove={this.handleRemoveVideo}
+                handlePlay={this.handlePlayVideo}
+              />
             </li>
           ))}
         </ol>

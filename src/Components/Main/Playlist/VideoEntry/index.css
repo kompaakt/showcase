@@ -3,7 +3,7 @@ img {
   max-height: 50px;
 }
 
-.root {
+.videoEntryRoot {
   border: 1px rgba(0, 0, 0, 0.13) solid;
   max-width: 300px;
   margin: 2px;
@@ -13,7 +13,7 @@ img {
   align-items: center;
 }
 
-.root > b {
+.videoEntryRoot > b {
   margin-left: 2px;
 }
 
