@@ -37,7 +37,7 @@ export default class VideoEntry extends Component {
     return (
       <React.Fragment>
         {this.state.info ? (
-          <div className="root">
+          <div className="videoEntryRoot">
             <img
               src={this.state.info.snippet.thumbnails.default.url}
               alt={this.state.info.snippet.title}

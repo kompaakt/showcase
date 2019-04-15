@@ -1,0 +1,13 @@
+.playlistRoot {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  margin-right: 30px;
+  margin-left: auto;
+  max-height: 300px;
+  border: 1px solid;
+}
+
+.playlistEntries {
+  overflow-y: auto;
+}
