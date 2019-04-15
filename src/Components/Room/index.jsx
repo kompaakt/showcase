@@ -1,6 +1,9 @@
 import React from "react";
 import SimpleWebRTC from "simplewebrtc";
 import VideoFrame from "../Main/VideoFrame/Player";
+import Playlist from "../Main/Playlist/index";
+import useEventListener from "../../utils/hooks/useEventListener";
+import "./index.css";
 
 function throttle(func, ms) {
   var isThrottled = false,
@@ -48,7 +51,7 @@ const Room = props => {
 
   const [webrtc, setWebrtc] = React.useState(
     new SimpleWebRTC({
-      // debug: true,
+      debug: true,
       enableDataChannels: true
     })
   );
@@ -56,7 +59,7 @@ const Room = props => {
     webrtc.on(
       "channelMessage",
       (peer, channelLabel, { messageType, payload }) => {
-        // console.log("new message", channelLabel, messageType, payload);
+        console.log("new message", channelLabel, messageType, payload);
         switch (channelLabel) {
           case "PlayerChannel": {
             setStatus(payload);
@@ -92,6 +95,7 @@ const Room = props => {
           if (Math.abs(player.getCurrentTime() - status.time) > 60) {
             console.log("time: ", player.getCurrentTime() - status.time);
             player.seekTo(status.time, true);
+            // console.log("playersdad", player);
           }
           play();
         }
@@ -135,15 +139,44 @@ const Room = props => {
     };
   }, []);
 
+  const [playerDimensions, setPlayerDimesions] = React.useState({
+    width: 450,
+    height: 600
+  }); // ToDo: figure out how to set dimensions on first render
+
+  useEventListener("resize", () =>
+    setPlayerDimesions({
+      width: document.getElementsByClassName("playerPlaceholder")[0]
+        .clientWidth,
+      height: document.getElementsByClassName("playerPlaceholder")[0]
+        .clientHeight
+    })
+  );
+
   return (
-    <>
-      <VideoFrame
-        videoId={currentPlayingVideoId}
-        handleSetPlayingStatus={handleSetPlayingStatus}
-        state={playingState}
-        setPlayer={settPlayer}
-      />
-    </>
+    <div className="roomWrapper">
+      <div className="roomRoot">
+        <div className="playerPlaceholder">
+          <VideoFrame
+            videoId={currentPlayingVideoId}
+            handleSetPlayingStatus={handleSetPlayingStatus}
+            state={playingState}
+            setPlayer={settPlayer}
+            size={playerDimensions}
+          />
+        </div>
+        <div
+          classname="playlistPlaceholder"
+          style={{ gridColumn: "3 / 4", gridRow: "1 / 5" }}
+        >
+          <Playlist />
+        </div>
+        <div
+          classname="chatPlaceholder"
+          style={{ gridColumn: "1 / 3", gridRow: "4 / 5" }}
+        />
+      </div>
+    </div>
   );
 };
 
