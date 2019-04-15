@@ -2,26 +2,34 @@ import React, { Component } from "react";
 import { usePeerState, useReceivePeerState } from "react-peer";
 import VideoFrame from "./VideoFrame/Player";
 import Playlist from "./Playlist/index";
-import Chat from "./Chat";
-import { stat } from "fs";
+import VendorChat from "./VendorChat";
 
-const MAGIC_CONSTANT = 2; // DEPENDS ON BUFFERING TIME
+const MAGIC_CONSTANT = 0.5; // DEPENDS ON BUFFERING TIME
 
-const MainScreen = () => {
+const MainScreen = props => {
+  const roomId = props.match.params.roomId;
   const [currentPlayingVideoId, setCurrentPlayingVideoId] = React.useState(
     "dQw4w9WgXcQ"
   );
   const [player, setPlayer] = React.useState(null);
+
   const [peerBrokerId, setPeerBrokerId] = React.useState("");
   const [state, setState, brokerId, connections, stateErr] = usePeerState(
-    "hello"
+    "hello",
+    roomId ? { brokerId: roomId } : null
   );
-  const [peerState, isConnected, recErr] = useReceivePeerState(peerBrokerId);
+  const [peerState, isConnected, recErr] = useReceivePeerState(peerBrokerId, {
+    brokerId: roomId
+  });
 
   const handlePlayVideo = id => {
     setCurrentPlayingVideoId(id);
   };
 
+  if (brokerId && peerBrokerId) {
+    console.log("connected", brokerId, peerBrokerId);
+  }
+  //
   const handleSendPlayingStatus = status => {
     setState({ status: status.data, time: player.getCurrentTime() });
   };
@@ -30,6 +38,12 @@ const MainScreen = () => {
     setPeerBrokerId(brokerId);
   };
 
+  const [isThemTyping, setIsThemTyping] = React.useState(false);
+
+  // const [state, setState, brokerId, connections, stateErr] = usePeerState(
+  //   "hello"
+  // );
+  // const [peerState, isConnected, recErr] = useReceivePeerState(peerBrokerId);
   // if (player && peerState) {
   //   console.log(
   //     `own state at ${new Date()}`,
@@ -88,8 +102,11 @@ const MainScreen = () => {
         state={peerState}
         setPlayer={setPlayer}
       />
-      {/* <Playlist handlePlayVideo={handlePlayVideo} />
-      <Chat /> */}
+      {/* <Playlist handlePlayVideo={handlePlayVideo} /> */}
+      <VendorChat
+        isThemTyping={isThemTyping}
+        setIsThemTyping={setIsThemTyping}
+      />
     </>
   );
 };
