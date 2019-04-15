@@ -20,12 +20,13 @@ img {
 .VideoEntryRoot > p {
   margin-left: 10px;
   font-family: "Fredoka One";
+  width: 100%;
 }
 
 .controlButtons {
   margin-left: auto;
   height: 100%;
-  margin-right: 4px;
+  width: 25%;
 }
 
 .controlButtons > button {
