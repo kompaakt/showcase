@@ -37,24 +37,24 @@ export default class VideoEntry extends Component {
     return (
       <React.Fragment>
         {this.state.info ? (
-          <div className="videoEntryRoot">
+          <div className="VideoEntryRoot">
             <img
               src={this.state.info.snippet.thumbnails.default.url}
               alt={this.state.info.snippet.title}
             />
-            <b>{this.state.info.snippet.title}</b>
+            <p>{this.state.info.snippet.title}</p>
             <div className="controlButtons">
               <button
                 className="playVideoButton"
                 onClick={this.handleClickPlay}
               >
-                <span role="img">Play</span>
+                <span role="img">▶️</span>
               </button>
               <button
                 className="removeVideoButton"
                 onClick={this.handleClickRemove}
               >
-                <span role="img">X</span>
+                <span role="img">❌</span>
               </button>
             </div>
           </div>
