@@ -3,41 +3,94 @@ import SimpleWebRTC from "simplewebrtc";
 import VideoFrame from "../Main/VideoFrame/Player";
 import Playlist from "../Main/Playlist/index";
 import useEventListener from "../../utils/hooks/useEventListener";
-import "./index.css";
+import styled from "styled-components/macro";
 
 const webrtc = new SimpleWebRTC({
   // debug: true,
   enableDataChannels: true
 });
 
-// function throttle(func, ms) {
-//   var isThrottled = false,
-//     savedArgs,
-//     savedThis;
+const Root = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: ${props => props.theme.gradient};
+  background-size: 100% 100%;
+`;
 
-//   function wrapper() {
-//     if (isThrottled) {
-//       // (2)
-//       savedArgs = arguments;
-//       savedThis = this;
-//       return;
-//     }
+const RoomRoot = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+  /* & > div {
+    z-index: 0;
+    grid-column: 1 / 3;
+    grid-row: 1 / 4;
 
-//     func.apply(this, arguments); // (1)
+    position: relative;
+    padding: 1px;
 
-//     isThrottled = true;
+    background-clip: padding-box; /* !importanté */
+    border: solid 5px transparent; /* !importanté */
+    border-radius: 5px;
+  } */
+`;
 
-//     setTimeout(function() {
-//       isThrottled = false; // (3)
-//       if (savedArgs) {
-//         wrapper.apply(savedThis, savedArgs);
-//         savedArgs = savedThis = null;
-//       }
-//     }, ms);
-//   }
+const PlayerPlaceholder = styled.div`
+  z-index: 0;
+  grid-column: 1 / 3;
+  grid-row: 1 / 4;
 
-//   return wrapper;
-// }
+  position: relative;
+  padding: 1px;
+
+  background-clip: padding-box; /* !importanté */
+  border: solid 5px transparent; /* !importanté */
+  border-radius: 5px;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    margin: -5px; /* !importanté */
+    border-radius: inherit; /* !importanté */
+    background: linear-gradient(190deg, #ffeb3b, #0298e2);
+    background-size: 400% 400%;
+  }
+`;
+
+const PlaylistPlaceholder = styled.div`
+  z-index: 0;
+  grid-column: 1 / 3;
+  grid-row: 1 / 4;
+
+  position: relative;
+  padding: 1px;
+
+  background-clip: padding-box; /* !importanté */
+  border: solid 5px transparent; /* !importanté */
+  border-radius: 5px;
+  grid-column: 3 / 4;
+  grid-row: 1 / 5;
+`;
+
+const ChatPlaceholder = styled.div`
+  grid-column: 1 / 3;
+  grid-row: 4 / 5;
+  z-index: 0;
+  grid-column: 1 / 3;
+  grid-row: 1 / 4;
+
+  position: relative;
+  padding: 1px;
+
+  background-clip: padding-box; /* !importanté */
+  border: solid 5px transparent; /* !importanté */
+  border-radius: 5px;
+`;
 
 const Room = props => {
   const roomId = props.match.params.roomId;
@@ -162,17 +215,15 @@ const Room = props => {
 
   useEventListener("resize", () =>
     setPlayerDimesions({
-      width: document.getElementsByClassName("playerPlaceholder")[0]
-        .clientWidth,
-      height: document.getElementsByClassName("playerPlaceholder")[0]
-        .clientHeight
+      width: document.getElementById("playerPlaceholder").clientWidth,
+      height: document.getElementById("playerPlaceholder").clientHeight
     })
   );
 
   return (
-    <div className="roomWrapper">
-      <div className="roomRoot">
-        <div className="playerPlaceholder">
+    <Root>
+      <RoomRoot>
+        <PlayerPlaceholder id="playerPlaceholder">
           <VideoFrame
             videoId={currentPlayingVideoId}
             handleSetPlayingStatus={handleSetPlayingStatus}
@@ -180,19 +231,13 @@ const Room = props => {
             setPlayer={settPlayer}
             size={playerDimensions}
           />
-        </div>
-        <div
-          classname="playlistPlaceholder"
-          style={{ gridColumn: "3 / 4", gridRow: "1 / 5" }}
-        >
+        </PlayerPlaceholder>
+        <PlaylistPlaceholder>
           <Playlist handlePlayVideo={setCurrentPlayingVideo} />
-        </div>
-        <div
-          classname="chatPlaceholder"
-          style={{ gridColumn: "1 / 3", gridRow: "4 / 5" }}
-        />
-      </div>
-    </div>
+        </PlaylistPlaceholder>
+        <ChatPlaceholder />
+      </RoomRoot>
+    </Root>
   );
 };
 
