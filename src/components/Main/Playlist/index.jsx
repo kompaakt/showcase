@@ -3,7 +3,38 @@ import VideoEntry from "./VideoEntry/index";
 // import MD5 from "object-hash";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import arrayMove from "array-move";
-import "./index.css";
+import styled from "styled-components/macro";
+
+const PlaylistRoot = styled.div`
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+`;
+
+const UrlInput = styled.div`
+  display: flex;
+  padding: 2px;
+  & > button {
+    margin-left: 5px;
+    background: linear-gradient(200deg, #0298e2, #ffeb3b);
+    background-size: 400% 400%;
+    border-radius: 5px;
+    border-color: #0042b0;
+  }
+  & > input {
+    width: 100%;
+    background: linear-gradient(183deg, #0298e2, #ffeb3b);
+    background-size: 400% 400%;
+    font-family: "Fredoka One";
+    border-radius: 5px;
+    border-color: #0042b0;
+  }
+`;
+
+const VideoEntries = styled.div`
+  overflow-y: auto;
+`;
 
 const SortableItem = SortableElement(
   ({ value, handlePlayVideo, handleRemoveVideo }) => (
@@ -84,16 +115,16 @@ class Playlist extends Component {
 
   render() {
     return (
-      <div className="playlistRoot">
-        <div className="urlInput">
+      <PlaylistRoot>
+        <UrlInput>
           <input type="text" onChange={this.handleChange} />
           <button onClick={this.handleClick}>
             <span role="img" aria-label={"Add video to playlist"}>
               ➕
             </span>
           </button>
-        </div>
-        <div className="videoEntries">
+        </UrlInput>
+        <VideoEntries>
           <SortableList
             items={this.state.videos}
             onSortEnd={this.onSortEnd}
@@ -103,8 +134,8 @@ class Playlist extends Component {
             useDragHandle
             pressDelay={50}
           />
-        </div>
-      </div>
+        </VideoEntries>
+      </PlaylistRoot>
     );
   }
 }

@@ -1,8 +1,57 @@
 import React, { useState } from "react";
-import "./index.css";
 import { Redirect } from "react-router-dom";
+import styled from "styled-components/macro";
 
-export default () => {
+const Container = styled.div`
+  background: ${props => props.theme.gradient};
+  background-size: 100% 100%;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+`;
+
+const Actions = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const JoinButton = styled.input`
+  border: 0px;
+  background: ${props => props.theme.button};
+  background-size: 400% 400%;
+  border-radius: 20px;
+  margin: 1%;
+  font-size: calc(6vw);
+  width: 50%;
+  height: 20%;
+  font-family: "Fredoka One";
+  text-align: center;
+`;
+
+const CreateButton = styled.button`
+  border: 0px;
+  background: ${props => props.theme.button};
+  background-size: 400% 400%;
+  border-radius: 20px;
+  margin: 1%;
+  font-size: calc(6vw);
+  width: 50%;
+  height: 20%;
+  font-family: "Fredoka One";
+  &:focus {
+    outline-width: 0;
+  }
+  &::placeholder {
+    color: black;
+  }
+`;
+
+const WelcomeScreen = props => {
   const [isHost, setIsHost] = useState(false);
 
   const [roomId, setRoomId] = useState("");
@@ -28,11 +77,10 @@ export default () => {
   };
 
   return (
-    <div className="container">
-      <div className="actions">
-        <input
+    <Container>
+      <Actions>
+        <JoinButton
           type="text"
-          className="btn join"
           placeholder="join"
           onKeyDown={handleSetRoomId}
         />
@@ -47,10 +95,10 @@ export default () => {
           onBlur={e => setIsFocusedCreateBtn(false)}
           onKeyDown={handleSetRoomId}
         /> */}
-        <button className="btn create" onClick={setRoom}>
-          create
-        </button>
-      </div>
-    </div>
+        <CreateButton onClick={setRoom}>create</CreateButton>
+      </Actions>
+    </Container>
   );
 };
+
+export default WelcomeScreen;
