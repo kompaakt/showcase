@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components/macro";
-import randomRoomName from "../../utils/randomRoomName";
+import { randomRoomName } from "../../utils/randomRoomName";
 
 const Container = styled.div`
   background: ${props => props.theme.gradient};
@@ -57,7 +57,7 @@ const CreateButton = styled.button`
 `;
 
 const WelcomeScreen = props => {
-  const [roomId, setRoomId] = useState("");
+  const [roomId, setRoomId] = useState(null);
 
   // const [isFocusedCreateBtn, setIsFocusedCreateBtn] = React.useState(false);
 
