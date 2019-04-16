@@ -12,5 +12,11 @@ const Theme = {
     color: `linear-gradient(200deg, #0298e2, #ffeb3b)`,
     size: `400% 400%`
   },
+  font: {
+    size: {
+      main: `6vw`
+    },
+    name: `Fredoka One`
+  }
 };
 export default Theme;

@@ -22,32 +22,30 @@ const Actions = styled.div`
 
 const JoinButton = styled.input`
   border: 0px;
-  background: ${props => props.theme.button};
+  background: ${props => props.theme.button.color};
   background-size: 400% 400%;
   border-radius: 20px;
   margin: 1%;
-  font-size: calc(6vw);
+  font-size: ${props => props.theme.font.size.main};
   width: 50%;
   height: 20%;
-  font-family: "Fredoka One";
+  font-family: ${props => props.theme.font.name};
   text-align: center;
 `;
 
 const CreateButton = styled.button`
   border: 0px;
-  background: ${props => props.theme.button};
+  background: ${props => props.theme.button.color};
   background-size: 400% 400%;
+  color: black;
   border-radius: 20px;
   margin: 1%;
-  font-size: calc(6vw);
+  font-size: ${props => props.theme.font.size.main};
   width: 50%;
   height: 20%;
-  font-family: "Fredoka One";
+  font-family: ${props => props.theme.font.name};
   &:focus {
     outline-width: 0;
-  }
-  &::placeholder {
-    color: black;
   }
 `;
 
