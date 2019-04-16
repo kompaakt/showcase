@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { sortableHandle } from "react-sortable-hoc";
 import fetchVideoInfo from "../../../../sideEffects/youtubeAPI";
 import "./index.css";
@@ -13,10 +13,10 @@ const DragHandle = sortableHandle(({ src, alt }) => {
 });
 
 const VideoEntry = props => {
-  const [id, setId] = useState(props.id);
-  const [icon, setIcon] = useState(null);
+  const id = props.id;
+  // const [icon, setIcon] = useState(null);
   const [info, setInfo] = useState(null);
-  const [name, setName] = useState(null);
+  // const [name, setName] = useState(null);
 
   fetchVideoInfo({ id, setInfo });
 
