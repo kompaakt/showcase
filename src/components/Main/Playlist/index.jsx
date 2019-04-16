@@ -17,14 +17,16 @@ const UrlInput = styled.div`
   padding: 2px;
   & > button {
     margin-left: 5px;
-    background: linear-gradient(200deg, #0298e2, #ffeb3b);
-    background-size: 400% 400%;
+    background: ${props => props.theme.button.color};
+    background-size: ${props => props.theme.button.gradientSize};
     border-radius: 5px;
     border-color: #0042b0;
   }
   & > input {
     width: 100%;
-    background: linear-gradient(183deg, #0298e2, #ffeb3b);
+    text-align: center;
+    background: ${props => props.theme.button.color};
+    background-size: ${props => props.theme.button.gradientSize};
     background-size: 400% 400%;
     font-family: "Fredoka One";
     border-radius: 5px;

@@ -10,8 +10,8 @@ const VideoEntryRoot = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background: linear-gradient(190deg, #0298e2, #ffeb3b);
-  background-size: 400% 400%;
+  background: ${props => props.theme.button.color};
+  background-size: ${props => props.theme.button.gradientSize};
   border-radius: 5px;
   & > p {
     margin-left: 10px;
@@ -28,7 +28,8 @@ const ControlledButtons = styled.div`
     margin-left: auto;
     height: 100%;
     margin-right: 5px;
-    background: linear-gradient(200deg, #0298e2, #ffeb3b);
+    background: ${props => props.theme.button.color};
+    background-size: ${props => props.theme.button.gradientSize};
     background-size: 400% 400%;
     border-color: #000000;
     border-radius: 5px;
