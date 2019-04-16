@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.css";
 import { Redirect } from "react-router-dom";
 
 export default () => {
-  const [isHost, setIsHost] = React.useState(false);
+  const [isHost, setIsHost] = useState(false);
 
-  const [roomId, setRoomId] = React.useState("");
+  const [roomId, setRoomId] = useState("");
 
   // const [isFocusedCreateBtn, setIsFocusedCreateBtn] = React.useState(false);
 
