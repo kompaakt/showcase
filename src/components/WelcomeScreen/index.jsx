@@ -7,7 +7,7 @@ export default () => {
 
   const [roomId, setRoomId] = React.useState("");
 
-  const [isFocusedCreateBtn, setIsFocusedCreateBtn] = React.useState(false);
+  // const [isFocusedCreateBtn, setIsFocusedCreateBtn] = React.useState(false);
 
   const handleSetRoomId = e => {
     if (e.keyCode === 13) {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import VideoEntry from "./VideoEntry/index";
-import MD5 from "object-hash";
+// import MD5 from "object-hash";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import arrayMove from "array-move";
 import "./index.css";

@@ -10,10 +10,7 @@ const webrtc = new SimpleWebRTC({
   enableDataChannels: true
 });
 
-function throttle(func, ms) {
-  var isThrottled = false,
-    savedArgs,
-    savedThis;
+// function throttle(func, ms) {
 
   function wrapper() {
     if (isThrottled) {
