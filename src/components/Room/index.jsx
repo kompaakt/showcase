@@ -1,9 +1,11 @@
 import React from "react";
 import SimpleWebRTC from "simplewebrtc";
+import styled from "styled-components/macro";
+import Popup from "reactjs-popup";
 import VideoFrame from "../Main/VideoFrame/Player";
 import Playlist from "../Main/Playlist/index";
 import useEventListener from "../../utils/hooks/useEventListener";
-import styled from "styled-components/macro";
+import { randomBreadName } from "../../utils/randomRoomName";
 
 const webrtc = new SimpleWebRTC({
   // debug: true,
@@ -92,7 +94,44 @@ const ChatPlaceholder = styled.div`
   border-radius: 5px;
 `;
 
+const SetUsernameModal = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const SetUsernameLabel = styled.div`
+  border: 0px;
+  background: ${props => props.theme.button.color};
+  background-size: 400% 400%;
+  border-radius: 20px;
+  margin: 1%;
+  font-size: ${props => props.theme.font.size.main};
+  font-family: ${props => props.theme.font.name};
+  text-align: center;
+  &:focus {
+    outline-width: 0;
+  }
+  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2);
+`;
+
+const SetUsernameInput = styled.input`
+  border: 0px;
+  background: ${props => props.theme.button.color};
+  background-size: 400% 400%;
+  border-radius: 20px;
+  margin: 1%;
+  box-sizing: content-box;
+  font-size: ${props => props.theme.font.size.main};
+  font-family: ${props => props.theme.font.name};
+  text-align: center;
+  &:focus {
+    outline-width: 0;
+  }
+  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2);
+`;
 const Room = props => {
+  const randomName = randomBreadName();
+  const [username, setUsername] = useState(localStorage.getItem("username"));
   const roomId = props.match.params.roomId;
   const isHost = props.location.isHost;
 
@@ -220,9 +259,32 @@ const Room = props => {
     })
   );
 
+  const handleSetUsernameInputOnEnter = e => {
+    if (e.keyCode === 13) {
+      setUsername(e.target.value);
+      localStorage.setItem("username", e.target.value);
+    }
+  };
   return (
     <Root>
       <RoomRoot>
+        {!username ? (
+          <Popup
+            modal
+            open={!username}
+            closeOnDocumentClick
+            contentStyle={{ background: "none", border: "none" }}
+          >
+            <SetUsernameModal>
+              <SetUsernameLabel>my name is:</SetUsernameLabel>
+              <SetUsernameInput
+                type="text"
+                value={randomName}
+                onKeyDown={handleSetUsernameInputOnEnter}
+              />
+            </SetUsernameModal>
+          </Popup>
+        ) : null}
         <PlayerPlaceholder id="playerPlaceholder">
           <VideoFrame
             videoId={currentPlayingVideoId}
