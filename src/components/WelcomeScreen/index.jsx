@@ -56,8 +56,6 @@ const CreateButton = styled.button`
 `;
 
 const WelcomeScreen = props => {
-  const [isHost, setIsHost] = useState(false);
-
   const [roomId, setRoomId] = useState("");
 
   // const [isFocusedCreateBtn, setIsFocusedCreateBtn] = React.useState(false);
@@ -68,8 +66,7 @@ const WelcomeScreen = props => {
     }
   };
 
-  const setRoom = () => {
-    setIsHost(true);
+  const handleClickCreateButton = () => {
     setRoomId(randomRoomName());
   };
 
@@ -82,7 +79,7 @@ const WelcomeScreen = props => {
           onKeyDown={handleSetRoomId}
         />
         {roomId ? (
-          <Redirect to={{ pathname: `/room/${roomId}`, isHost }} />
+          <Redirect to={{ pathname: `/room/${roomId}`, isHost: true }} />
         ) : null}
         {/* <input
           type="text"
@@ -92,7 +89,7 @@ const WelcomeScreen = props => {
           onBlur={e => setIsFocusedCreateBtn(false)}
           onKeyDown={handleSetRoomId}
         /> */}
-        <CreateButton onClick={setRoom}>create</CreateButton>
+        <CreateButton onClick={handleClickCreateButton}>create</CreateButton>
       </Actions>
     </Container>
   );
