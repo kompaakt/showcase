@@ -87,7 +87,11 @@ class Playlist extends Component {
       <div className="playlistRoot">
         <div className="urlInput">
           <input type="text" onChange={this.handleChange} />
-          <button onClick={this.handleClick}>➕</button>
+          <button onClick={this.handleClick}>
+            <span role="img" aria-label={"Add video to playlist"}>
+              ➕
+            </span>
+          </button>
         </div>
         <div className="videoEntries">
           <SortableList

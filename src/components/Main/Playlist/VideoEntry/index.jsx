@@ -39,10 +39,14 @@ const VideoEntry = props => {
           <p>{info.snippet.title}</p>
           <div className="controlButtons">
             <button className="playVideoButton" onClick={handleClickPlay}>
-              <span role="img">▶️</span>
+              <span role="img" aria-label={"play video from playlist"}>
+                ▶️
+              </span>
             </button>
             <button className="removeVideoButton" onClick={handleClickRemove}>
-              <span role="img">❌</span>
+              <span role="img" aria-label={"Remove video from playlist"}>
+                ❌
+              </span>
             </button>
           </div>
         </div>
