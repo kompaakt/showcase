@@ -3,7 +3,8 @@ image: node:9
 stages:
   - publish
 
-before_script: npm install
+before_script: 
+  - npm install
 
 publish:
   stage: publish
