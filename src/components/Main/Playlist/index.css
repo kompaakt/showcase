@@ -1,0 +1,32 @@
+.urlInput {
+  display: flex;
+  padding: 2px;
+}
+
+.urlInput > button {
+  margin-left: 5px;
+  background: linear-gradient(200deg, #0298e2, #ffeb3b);
+  background-size: 400% 400%;
+  border-radius: 5px;
+  border-color: #0042b0;
+}
+
+.urlInput > input {
+  width: 100%;
+  background: linear-gradient(183deg, #0298e2, #ffeb3b);
+  background-size: 400% 400%;
+  font-family: "Fredoka One";
+  border-radius: 5px;
+  border-color: #0042b0;
+}
+
+.playlistRoot {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+
+.videoEntries {
+  overflow-y: auto;
+}
