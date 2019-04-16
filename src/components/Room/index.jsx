@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import SimpleWebRTC from "simplewebrtc";
 import styled from "styled-components/macro";
 import Popup from "reactjs-popup";
@@ -135,12 +135,12 @@ const Room = props => {
   const roomId = props.match.params.roomId;
   const isHost = props.location.isHost;
 
-  const [playingState, setPlayingState] = React.useState({});
+  const [playingState, setPlayingState] = useState({});
 
-  const [currentPlayingVideoId, setCurrentPlayingVideoId] = React.useState(
+  const [currentPlayingVideoId, setCurrentPlayingVideoId] = useState(
     "dQw4w9WgXcQ"
   );
-  const [player, setPlayer] = React.useState(null);
+  const [player, setPlayer] = useState(null);
 
   const settPlayer = player => {
     setPlayer(player);
@@ -247,7 +247,7 @@ const Room = props => {
     };
   }, []);
 
-  const [playerDimensions, setPlayerDimesions] = React.useState({
+  const [playerDimensions, setPlayerDimesions] = useState({
     width: 450,
     height: 600
   }); // ToDo: figure out how to set dimensions on first render
@@ -265,6 +265,7 @@ const Room = props => {
       localStorage.setItem("username", e.target.value);
     }
   };
+
   return (
     <Root>
       <RoomRoot>
