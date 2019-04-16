@@ -131,7 +131,10 @@ const SetUsernameInput = styled.input`
 `;
 const Room = props => {
   const randomName = randomBreadName();
-  const [username, setUsername] = useState(localStorage.getItem("username"));
+  const [username, setUsername] = useState({
+    name: localStorage.getItem("username") || randomName,
+    set: localStorage.getItem("username") ? true : false
+  });
   const roomId = props.match.params.roomId;
   const isHost = props.location.isHost;
 
@@ -261,27 +264,31 @@ const Room = props => {
 
   const handleSetUsernameInputOnEnter = e => {
     if (e.keyCode === 13) {
-      setUsername(e.target.value);
+      setUsername({ name: e.target.value });
       localStorage.setItem("username", e.target.value);
     }
+  };
+
+  const handleSetUsernameOnChange = e => {
+    setUsername({ name: e.target.value });
   };
 
   return (
     <Root>
       <RoomRoot>
-        {!username ? (
+        {!localStorage.getItem("username") ? (
           <Popup
             modal
-            open={!username}
-            closeOnDocumentClick
+            open={!username.set}
             contentStyle={{ background: "none", border: "none" }}
           >
             <SetUsernameModal>
               <SetUsernameLabel>my name is:</SetUsernameLabel>
               <SetUsernameInput
                 type="text"
-                value={randomName}
+                value={username.name}
                 onKeyDown={handleSetUsernameInputOnEnter}
+                onChange={handleSetUsernameOnChange}
               />
             </SetUsernameModal>
           </Popup>

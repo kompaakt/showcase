@@ -214,23 +214,13 @@ function randomTraditionalName() {
     .replace(/-a-(a|e|i|o|u)/, "-an-$1");
 }
 
-function randomBreadName() {
-  const amount = random(numbers);
-  const pluralBreadProduct = random(breadProducts)[1];
-  const article = random(["a", "one"]);
+export function randomBreadName() {
+  const adjective = random(adjectives);
   const singularBreadProduct = random(breadProducts)[0];
 
-  return [amount, pluralBreadProduct, "and", article, singularBreadProduct]
-    .join("-")
-    .replace(/\s/g, "-");
+  return [adjective, singularBreadProduct].join(" ");
 }
 
-function randomRoomName() {
-  if (Math.floor(Math.random() * 5) > 1) {
-    return randomTraditionalName();
-  } else {
-    return randomBreadName();
-  }
+export function randomRoomName() {
+  return randomTraditionalName();
 }
-
-export default randomRoomName;
