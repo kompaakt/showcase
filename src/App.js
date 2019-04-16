@@ -4,7 +4,7 @@ import "./App.css";
 import WelcomeScreen from "./components/WelcomeScreen/index.jsx";
 // import MainScreen from "./components/Main/index";
 import Room from "./components/Room/index.jsx";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components/macro";
 import Theme from "./theme";
 
 class App extends Component {
