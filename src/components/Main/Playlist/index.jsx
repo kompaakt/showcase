@@ -57,7 +57,7 @@ class Playlist extends Component {
     const inputValue = this.state.newVideoFromInput;
     let sanitizedVideoId = null;
     const match = inputValue.match(
-      /^.*(youtu\.be\/|vi?\/|u\/\w\/|embed\/|\?vi?=|\&vi?=)([^#\&\?]*).*/
+      /^.*(youtu\.be\/|vi?\/|u\/\w\/|embed\/|\?vi?=|vi?=)([^#]*).*/
     );
     if (match && match[2].length === 11) {
       sanitizedVideoId = match[2];
