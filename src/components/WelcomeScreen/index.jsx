@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components/macro";
+import randomRoomName from "../../utils/randomRoomName";
 
 const Container = styled.div`
   background: ${props => props.theme.gradient};
@@ -31,13 +32,18 @@ const JoinButton = styled.input`
   height: 20%;
   font-family: ${props => props.theme.font.name};
   text-align: center;
+  &:focus {
+    outline-width: 0;
+  }
+  &::placeholder {
+    color: black;
+  }
 `;
 
 const CreateButton = styled.button`
   border: 0px;
   background: ${props => props.theme.button.color};
   background-size: 400% 400%;
-  color: black;
   border-radius: 20px;
   margin: 1%;
   font-size: ${props => props.theme.font.size.main};
@@ -62,16 +68,9 @@ const WelcomeScreen = props => {
     }
   };
 
-  const generateRoomId = idLentgh => {
-    const dec2hex = dec => ("0" + dec.toString(16)).substr(-2);
-    var arr = new Uint8Array((idLentgh || 40) / 2);
-    window.crypto.getRandomValues(arr);
-    return Array.from(arr, dec2hex).join("");
-  };
-
   const setRoom = () => {
     setIsHost(true);
-    setRoomId(generateRoomId(20));
+    setRoomId(randomRoomName());
   };
 
   return (
