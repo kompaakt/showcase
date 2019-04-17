@@ -45,8 +45,8 @@ const SortableItem = SortableElement(
       <VideoEntry
         id={value}
         key={value}
-        handleRemove={handleRemoveVideo}
-        handlePlay={handlePlayVideo}
+        handleRemoveVideo={handleRemoveVideo}
+        handlePlayVideo={handlePlayVideo}
       />
     </div>
   )
@@ -125,7 +125,9 @@ class Playlist extends Component {
   };
 
   handleRemoveVideo = id => {
-    const newVideos = this.state.videos.filter(video => video.id !== id);
+    console.log("handleRemoveVideo", id);
+    const newVideos = this.state.videos.filter(vid => vid !== id);
+    console.log(this.state.videos, newVideos);
     this.setState({ videos: newVideos });
   };
 
