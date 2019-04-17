@@ -4,6 +4,7 @@ import VideoEntry from "./VideoEntry/index";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import arrayMove from "array-move";
 import styled from "styled-components/macro";
+import { fetchPlaylistInfo } from "../../../sideEffects/youtubeAPI";
 
 const PlaylistRoot = styled.div`
   width: auto;
@@ -89,14 +90,31 @@ class Playlist extends Component {
   handleClick = () => {
     const inputValue = this.state.newVideoFromInput;
     let sanitizedVideoId = null;
-    const match = inputValue.match(
+    const matchVideo = inputValue.match(
       /^.*(youtu\.be\/|vi?\/|u\/\w\/|embed\/|\?vi?=|vi?=)([^#]*).*/
     );
-    if (match && match[2].length === 11) {
-      sanitizedVideoId = match[2];
+    const matchPlaylist = inputValue.match(
+      /^.*(youtu.be\/|list=)([^#\&\?]*).*/
+    );
+    if (matchVideo && matchVideo[2].length === 11) {
+      sanitizedVideoId = matchVideo[2];
       const newVideos = this.state.videos;
       newVideos.push(sanitizedVideoId);
       this.setState({ videos: newVideos });
+    } else if (matchPlaylist && matchPlaylist[2]) {
+      fetch(
+        `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${
+          matchPlaylist[2]
+        }&key=${"AIzaSyB8PbKRvL7sAoTdhklSKZ1toHd2Pi4l5vE"}`
+      )
+        .then(resp => resp.json())
+        .then(data => {
+          const oldVideos = this.state.videos;
+          const newVideos = data.items.map(video => {
+            return video.snippet.resourceId.videoId;
+          });
+          this.setState({ videos: oldVideos.concat(newVideos) });
+        });
     } else {
       alert("not a valid video id");
     }
