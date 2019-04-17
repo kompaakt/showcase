@@ -12,10 +12,11 @@ const Player = props => {
     event.target.pauseVideo();
   };
 
-  const size = props.size;
+  // const size = props.size;
   const opts = {
-    height: size.height,
-    width: size.width,
+    width: "100%",
+    allowfullscreen: true,
+    frameborder: 0,
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 1
