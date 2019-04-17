@@ -10,7 +10,7 @@ const PlaylistRoot = styled.div`
   width: auto;
   display: flex;
   flex-direction: column;
-  height: auto;
+  height: 100%;
 `;
 
 const UrlInput = styled.div`
@@ -22,6 +22,7 @@ const UrlInput = styled.div`
     background-size: ${props => props.theme.button.gradientSize};
     border-radius: 5px;
     border-color: #0042b0;
+    margin-left: 2px;
   }
   & > input {
     width: 100%;
@@ -36,7 +37,9 @@ const UrlInput = styled.div`
 `;
 
 const VideoEntries = styled.div`
-  overflow-y: auto;
+  max-height: 100%;
+  overflow-y: scroll;
+  border-radius: 10px;
 `;
 
 const SortableItem = SortableElement(
