@@ -13,14 +13,12 @@ const webrtc = new SimpleWebRTC({
 });
 
 const Root = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background: ${props => props.theme.gradient};
-  background-size: 100% 100%;
+  height: 100%;
 `;
 
 const RoomRoot = styled.div`
   display: grid;
+  height: 100%;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 10px;
   grid-auto-rows: minmax(100px, auto);
@@ -35,17 +33,16 @@ const RoomRoot = styled.div`
     background-clip: padding-box; /* !importanté */
     border: solid 5px transparent; /* !importanté */
     border-radius: 5px;
-  } */
 `;
 
 const PlayerPlaceholder = styled.div`
-  z-index: 0;
   grid-column: 1 / 3;
   grid-row: 1 / 4;
 
   position: relative;
   padding: 1px;
 
+  max-height: 100%;
   background-clip: padding-box; /* !importanté */
   border: solid 5px transparent; /* !importanté */
   border-radius: 5px;
@@ -57,41 +54,27 @@ const PlayerPlaceholder = styled.div`
     bottom: 0;
     left: 0;
     z-index: -1;
-    margin: -5px; /* !importanté */
-    border-radius: inherit; /* !importanté */
-    background: linear-gradient(190deg, #ffeb3b, #0298e2);
+    margin: -5px;
+    border-radius: inherit;
+    background: ${props => props.theme.button.color};
     background-size: 400% 400%;
   }
 `;
 
 const PlaylistPlaceholder = styled.div`
-  z-index: 0;
-  grid-column: 1 / 3;
-  grid-row: 1 / 4;
-
-  position: relative;
-  padding: 1px;
-
-  background-clip: padding-box; /* !importanté */
-  border: solid 5px transparent; /* !importanté */
-  border-radius: 5px;
   grid-column: 3 / 4;
-  grid-row: 1 / 5;
+  grid-row: 1 / 4;
+  border-radius: 5px;
+  background: ${props => props.theme.button.color};
+  background-size: 400% 400%;
 `;
 
 const ChatPlaceholder = styled.div`
-  grid-column: 1 / 3;
+  grid-column: 3 / 4;
   grid-row: 4 / 5;
-  z-index: 0;
-  grid-column: 1 / 3;
-  grid-row: 1 / 4;
-
-  position: relative;
-  padding: 1px;
-
-  background-clip: padding-box; /* !importanté */
-  border: solid 5px transparent; /* !importanté */
   border-radius: 5px;
+  background: ${props => props.theme.button.color};
+  background-size: 400% 400%;
 `;
 
 const SetUsernameModal = styled.div`
