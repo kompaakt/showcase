@@ -25,6 +25,8 @@ const ControlledButtons = styled.div`
   height: 100%;
   width: 25%;
   & > button {
+    margin-bottom: 1px;
+    margin-top: 1px;
     margin-left: auto;
     height: 100%;
     margin-right: 5px;
