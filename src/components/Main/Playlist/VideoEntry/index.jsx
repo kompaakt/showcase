@@ -62,11 +62,12 @@ const VideoEntry = props => {
   fetchVideoInfo({ id, setInfo });
 
   const handleClickRemove = () => {
-    props.handleRemove(id);
+    console.log("handleClickRemove");
+    props.handleRemoveVideo(id);
   };
 
   const handleClickPlay = () => {
-    props.handlePlay(id);
+    props.handlePlayVideo(id);
   };
 
   return (
