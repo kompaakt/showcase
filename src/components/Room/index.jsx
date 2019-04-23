@@ -78,6 +78,17 @@ class Room extends Component {
               this.setState({ playlist: [...this.state.playlist, newVideo] });
               break;
             }
+            case "RemoveVideo": {
+              const removeVideoId = payload;
+              this.setState({
+                playlist: [...this.state.playlist, removeVideoId]
+              });
+              const newPlaylist = this.state.playlist.filter(
+                id => id !== removeVideoId
+              );
+              this.setState({ playlist: [...newPlaylist] });
+              break;
+            }
             default:
               break;
           }
