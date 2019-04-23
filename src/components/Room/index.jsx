@@ -1,162 +1,101 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import SimpleWebRTC from "simplewebrtc";
-import styled from "styled-components/macro";
-import Popup from "reactjs-popup";
-import VideoFrame from "../Main/VideoFrame/Player";
-import Playlist from "../Main/Playlist/index";
-import useEventListener from "../../utils/hooks/useEventListener";
-import { randomBreadName } from "../../utils/randomRoomName";
+import "react-toastify/dist/ReactToastify.css";
+import NicknamePrompt from "../Main/NicknamePrompt";
+import {
+  RoomRoot,
+  PlayerPlaceholder,
+  PlaylistPlaceholder,
+  CommunicationDashboardPlaceholder,
+  MembersAndMic
+} from "./StyledComponents.js";
+import "./Notification.css";
 
 const webrtc = new SimpleWebRTC({
   // debug: true,
+  // localVideoEl: "localVideo",
+  // remoteVideosEl: "remoteVideos",
   enableDataChannels: true
+  // autoRequestMedia: true,
+  // media: { audio: true, video: true }
 });
 
-const Root = styled.div`
-  height: 100%;
-`;
-
-const RoomRoot = styled.div`
-  display: grid;
-  height: 100%;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px;
-  grid-auto-rows: minmax(100px, auto);
-  /* & > div {
-    z-index: 0;
-    grid-column: 1 / 3;
-    grid-row: 1 / 4;
-
-    position: relative;
-    padding: 1px;
-
-    background-clip: padding-box; /* !importanté */
-    border: solid 5px transparent; /* !importanté */
-    border-radius: 5px;
-`;
-
-const PlayerPlaceholder = styled.div`
-  grid-column: 1 / 3;
-  grid-row: 1 / 4;
-
-  position: relative;
-  padding: 1px;
-
-  max-height: 100%;
-  background-clip: padding-box; /* !importanté */
-  border: solid 5px transparent; /* !importanté */
-  border-radius: 5px;
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-    margin: -5px;
-    border-radius: inherit;
-    background: ${props => props.theme.button.color};
-    background-size: 400% 400%;
+class Room extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: localStorage.getItem("username") || null,
+      members: []
+    };
   }
-`;
 
-const PlaylistPlaceholder = styled.div`
-  grid-column: 3 / 4;
-  grid-row: 1 / 4;
-  border-radius: 5px;
-  background: ${props => props.theme.button.color};
-  background-size: 400% 400%;
-`;
+  roomId = this.props.match.params.roomId;
+  isHost = this.props.location.isHost;
 
-const ChatPlaceholder = styled.div`
-  grid-column: 3 / 4;
-  grid-row: 4 / 5;
-  border-radius: 5px;
-  background: ${props => props.theme.button.color};
-  background-size: 400% 400%;
-`;
+  componentDidMount() {
+    // Create or join the room
+    if (this.roomId && this.isHost) {
+      webrtc.createRoom(this.roomId, () => {});
+    } else if (this.roomId) {
+      webrtc.joinRoom(this.roomId, () => {
+        const username = localStorage.getItem("username");
+        if (username) {
+          webrtc.sendDirectlyToAll("MembersList", "NewMember", username);
+          setTimeout(
+            () =>
+              webrtc.sendDirectlyToAll("MembersList", "NewMember", username),
+            1500
+          );
+        }
+      });
+    }
 
-const SetUsernameModal = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const SetUsernameLabel = styled.div`
-  border: 0px;
-  background: ${props => props.theme.button.color};
-  background-size: 400% 400%;
-  border-radius: 20px;
-  margin: 1%;
-  font-size: ${props => props.theme.font.size.main};
-  font-family: ${props => props.theme.font.name};
-  text-align: center;
-  &:focus {
-    outline-width: 0;
-  }
-  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2);
-`;
-
-const SetUsernameInput = styled.input`
-  border: 0px;
-  background: ${props => props.theme.button.color};
-  background-size: 400% 400%;
-  border-radius: 20px;
-  margin: 1%;
-  box-sizing: content-box;
-  font-size: ${props => props.theme.font.size.main};
-  font-family: ${props => props.theme.font.name};
-  text-align: center;
-  &:focus {
-    outline-width: 0;
-  }
-  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2);
-`;
-const Room = props => {
-  const randomName = randomBreadName();
-  const [username, setUsername] = useState({
-    name: localStorage.getItem("username") || randomName,
-    set: localStorage.getItem("username") ? true : false
-  });
-  const roomId = props.match.params.roomId;
-  const isHost = props.location.isHost;
-
-  const [playingState, setPlayingState] = useState({});
-
-  const [currentPlayingVideoId, setCurrentPlayingVideoId] = useState(
-    "dQw4w9WgXcQ"
-  );
-  const [player, setPlayer] = useState(null);
-
-  const settPlayer = player => {
-    setPlayer(player);
-  };
-
-  const setCurrentPlayingVideo = id => {
-    setCurrentPlayingVideoId(id);
-    webrtc.sendDirectlyToAll("PlayerChannel", "VideoId", {
-      id
-    });
-  };
-
-  if (player) {
-    webrtc.on("channelMessage", (peer, channelLabel, messageType) => {
-      console.log(
-        "new message",
-        channelLabel,
-        messageType,
-        messageType.payload
-      );
-      switch (channelLabel) {
-        case "PlayerChannel": {
-          switch (messageType.type) {
-            case "VideoId": {
-              setCurrentPlayingVideoId(messageType.payload.id);
-              player.playVideo();
+    // Set callbacks on recieved channel messages
+    webrtc.on("channelMessage", (peer, channelLabel, data) => {
+      const channel = channelLabel;
+      const type = data.type;
+      const payload = data.payload;
+      switch (channel) {
+        case "MembersList": {
+          switch (type) {
+            case "NewMember": {
+              const newMember = payload;
+              this.addMemberToList(newMember);
+              // send your name to novice
+              webrtc.sendDirectlyToAll(
+                "MembersList",
+                "AddOldMember",
+                localStorage.getItem("username")
+              );
+              toast(`${newMember} has joined the room!`, {
+                position: "top-left",
+                autoClose: 2500,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                className: "Notification"
+              });
               break;
             }
-            case "PlayingStatus": {
-              setStatus(messageType.payload);
+            case "MemberLeft": {
+              const leftMember = payload;
+              this.deleteLeftMemberFromList(leftMember);
+              toast(`${leftMember} has left the room!`, {
+                position: "top-left",
+                autoClose: 2500,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                className: "Notification"
+              });
+              break;
+            }
+            case "AddOldMember": {
+              const oldMember = payload;
+              this.addMemberToList(oldMember);
               break;
             }
             default:
@@ -164,134 +103,58 @@ const Room = props => {
           }
           break;
         }
-        default: {
+        default:
           break;
-        }
       }
     });
+
+    // Notify the room on exit
+    window.addEventListener("beforeunload", ev => {
+      webrtc.sendDirectlyToAll(
+        "MembersList",
+        "MemberLeft",
+        localStorage.getItem("username")
+      );
+    });
   }
-  const handleSetPlayingStatus = status => {
-    if (status) {
-      setPlayingState(status.data);
 
-      webrtc.sendDirectlyToAll("PlayerChannel", "PlayingStatus", {
-        state: status.data,
-        time: player.getCurrentTime()
-      });
+  addMemberToList = member => {
+    if (this.state.members.indexOf(member) === -1) {
+      this.setState({ members: [...this.state.members, member] });
     }
   };
 
-  const play = () => player.playVideo();
-  const pause = () => player.pauseVideo();
-
-  const setStatus = status => {
-    switch (status.state) {
-      case 1: {
-        if (playingState !== 2) {
-          if (Math.abs(player.getCurrentTime() - status.time) > 60) {
-            player.seekTo(status.time, true);
-          }
-          play();
-        }
-        break;
-      }
-      case 2: {
-        if (playingState !== 1) {
-          if (Math.abs(player.getCurrentTime() - status.time) > 1) {
-            player.seekTo(status.time, true);
-          }
-          pause();
-        }
-        break;
-      }
-      default: {
-        break;
-      }
+  deleteLeftMemberFromList = leftMember => {
+    if (this.state.members.indexOf(leftMember) !== -1) {
+      const newMembers = this.state.members.filter(
+        member => member !== leftMember
+      );
+      this.setState({ members: newMembers });
     }
   };
 
-  React.useEffect(() => {
-    if (roomId && isHost) {
-      webrtc.createRoom(roomId, () => {
-        console.log("created room");
-      });
-    } else if (roomId) {
-      webrtc.joinRoom(roomId, () => {
-        console.log("joined");
-        webrtc.sendDirectlyToAll(
-          "hello chanel",
-          "message",
-          `hello from ${isHost ? "host" : "guest"}`
-        );
-      });
-    }
-
-    return function cleanup() {
-      console.log("cleanup");
-      webrtc.leaveRoom();
-      // webrtc.disconnect();
-    };
-  }, []);
-
-  const [playerDimensions, setPlayerDimesions] = useState({
-    width: 450,
-    height: 600
-  }); // ToDo: figure out how to set dimensions on first render
-
-  useEventListener("resize", () =>
-    setPlayerDimesions({
-      width: document.getElementById("playerPlaceholder").clientWidth,
-      height: document.getElementById("playerPlaceholder").clientHeight
-    })
-  );
-
-  const handleSetUsernameInputOnEnter = e => {
-    if (e.keyCode === 13) {
-      setUsername({ name: e.target.value });
-      localStorage.setItem("username", e.target.value);
-    }
+  _onUsernameSet = username => {
+    localStorage.setItem("username", username);
+    webrtc.sendDirectlyToAll("MembersList", "NewMember", username);
   };
 
-  const handleSetUsernameOnChange = e => {
-    setUsername({ name: e.target.value });
-  };
-
-  return (
-    <Root>
-      <RoomRoot>
-        {!localStorage.getItem("username") ? (
-          <Popup
-            modal
-            open={!username.set}
-            contentStyle={{ background: "none", border: "none" }}
-          >
-            <SetUsernameModal>
-              <SetUsernameLabel>my name is:</SetUsernameLabel>
-              <SetUsernameInput
-                type="text"
-                value={username.name}
-                onKeyDown={handleSetUsernameInputOnEnter}
-                onChange={handleSetUsernameOnChange}
-              />
-            </SetUsernameModal>
-          </Popup>
-        ) : null}
-        <PlayerPlaceholder id="playerPlaceholder">
-          <VideoFrame
-            videoId={currentPlayingVideoId}
-            handleSetPlayingStatus={handleSetPlayingStatus}
-            state={playingState}
-            setPlayer={settPlayer}
-            size={playerDimensions}
-          />
-        </PlayerPlaceholder>
-        <PlaylistPlaceholder>
-          <Playlist handlePlayVideo={setCurrentPlayingVideo} />
-        </PlaylistPlaceholder>
-        <ChatPlaceholder />
-      </RoomRoot>
-    </Root>
-  );
-};
-
+  render() {
+    return (
+      <>
+        <RoomRoot>
+          <PlayerPlaceholder />
+          <PlaylistPlaceholder />
+          <CommunicationDashboardPlaceholder>
+            {this.state.username ? <div>{this.state.username}</div> : null}
+            {this.state.members && this.state.members.length > 0
+              ? this.state.members.map(member => <div>{member}</div>)
+              : null}
+          </CommunicationDashboardPlaceholder>
+        </RoomRoot>
+        <NicknamePrompt onUsernameSet={this._onUsernameSet} />
+        <ToastContainer />
+      </>
+    );
+  }
+}
 export default Room;
