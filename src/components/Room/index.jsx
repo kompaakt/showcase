@@ -10,6 +10,10 @@ import {
   CommunicationDashboardPlaceholder,
   MembersAndMic
 } from "./StyledComponents.js";
+import Chat from "../Main/VendorChat";
+import Playlist from "../Main/Playlist/index";
+import AudioControls from "../AudioControls";
+import MembersList from "../MembersList";
 import "./Notification.css";
 
 const webrtc = new SimpleWebRTC({
@@ -26,19 +30,29 @@ class Room extends Component {
     super(props);
     this.state = {
       username: localStorage.getItem("username") || null,
-      members: []
+      members: [],
+      playlist: []
     };
   }
 
   roomId = this.props.match.params.roomId;
   isHost = this.props.location.isHost;
 
+  initChannels() {
+    webrtc.sendDirectlyToAll("Playlist", "", ""); //
+    webrtc.sendDirectlyToAll("Chat", "", ""); //
+    webrtc.sendDirectlyToAll("Player", "", ""); //
+  }
+
   componentDidMount() {
     // Create or join the room
     if (this.roomId && this.isHost) {
-      webrtc.createRoom(this.roomId, () => {});
+      webrtc.createRoom(this.roomId, () => {
+        this.initChannels();
+      });
     } else if (this.roomId) {
       webrtc.joinRoom(this.roomId, () => {
+        this.initChannels();
         const username = localStorage.getItem("username");
         if (username) {
           webrtc.sendDirectlyToAll("MembersList", "NewMember", username);
@@ -57,6 +71,18 @@ class Room extends Component {
       const type = data.type;
       const payload = data.payload;
       switch (channel) {
+        case "Playlist": {
+          switch (type) {
+            case "NewVideo": {
+              const newVideo = payload;
+              this.setState({ playlist: [...this.state.playlist, newVideo] });
+              break;
+            }
+            default:
+              break;
+          }
+          break;
+        }
         case "MembersList": {
           switch (type) {
             case "NewMember": {
@@ -138,17 +164,44 @@ class Room extends Component {
     webrtc.sendDirectlyToAll("MembersList", "NewMember", username);
   };
 
+  _onUpdatePlaylist = ({ action, item }) => {
+    console.log("_onUpdatePlaylist", item);
+    if (item.type === "video") {
+      if (action === "add") {
+        this.setState({ playlist: [...this.state.playlist, item.id] });
+        webrtc.sendDirectlyToAll("Playlist", "NewVideo", item.id);
+      }
+      if (action === "remove") {
+        const newPlaylist = this.state.playlist.filter(id => id !== item.id);
+        this.setState({ playlist: [...newPlaylist] });
+        webrtc.sendDirectlyToAll("Playlist", "RemoveVideo", item.id);
+      }
+    }
+    if (item.type === "playlist") {
+      // this.setState({playlist: [...this.state.playlist, item.id]})
+      // webrtc.sendDirectlyToAll("Playlist", "NewVideo", item.id);
+    }
+  };
+
   render() {
     return (
       <>
         <RoomRoot>
           <PlayerPlaceholder />
-          <PlaylistPlaceholder />
+          <PlaylistPlaceholder>
+            <Playlist
+              playlist={this.state.playlist}
+              onUpdatePlaylist={this._onUpdatePlaylist}
+            />
+          </PlaylistPlaceholder>
           <CommunicationDashboardPlaceholder>
-            {this.state.username ? <div>{this.state.username}</div> : null}
-            {this.state.members && this.state.members.length > 0
-              ? this.state.members.map(member => <div>{member}</div>)
-              : null}
+            <MembersAndMic>
+              <MembersList
+                membersList={[...this.state.members, this.state.username]}
+              />
+              <AudioControls />
+            </MembersAndMic>
+            <Chat />
           </CommunicationDashboardPlaceholder>
         </RoomRoot>
         <NicknamePrompt onUsernameSet={this._onUsernameSet} />
