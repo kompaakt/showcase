@@ -89,6 +89,11 @@ class Room extends Component {
               this.setState({ playlist: [...newPlaylist] });
               break;
             }
+            case "AddPlaylist": {
+              const playlist = payload;
+              this.setState({ playlist });
+              break;
+            }
             default:
               break;
           }
@@ -104,6 +109,12 @@ class Room extends Component {
                 "MembersList",
                 "AddOldMember",
                 localStorage.getItem("username")
+              );
+              // send existing playlist to novice
+              webrtc.sendDirectlyToAll(
+                "Playlist",
+                "AddPlaylist",
+                this.state.playlist
               );
               toast(`${newMember} has joined the room!`, {
                 position: "top-left",
